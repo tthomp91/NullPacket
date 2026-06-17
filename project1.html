@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enterprise Office Network — nullpacket.dev</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0A0F1E;
+      --slate:  #1E2840;
+      --green:  #00FF88;
+      --cyan:   #64D8F0;
+      --text:   #E8EDF5;
+      --muted:  #7A8BA8;
+      --border: rgba(100,216,240,0.15);
+    }
+
+    body {
+      background: var(--navy);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 3rem;
+      background: rgba(10,15,30,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700; font-size: 1rem;
+      color: var(--green); text-decoration: none; letter-spacing: 0.05em;
+    }
+    .nav-logo span { color: var(--text); }
+    .back-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem; color: var(--muted);
+      text-decoration: none; letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--green); }
+
+    /* PAGE */
+    .page { max-width: 960px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+
+    /* HEADER */
+    .project-header { margin-bottom: 3rem; }
+    .breadcrumb {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; color: var(--muted);
+      letter-spacing: 0.1em; margin-bottom: 1rem;
+    }
+    .breadcrumb a { color: var(--muted); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--green); }
+    .project-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700; line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .project-meta {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      align-items: center; margin-bottom: 1.5rem;
+    }
+    .status-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.1em;
+      padding: 0.25rem 0.6rem; border-radius: 2px;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .status-active { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.25); }
+    .status-active::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--green); animation: pulse 1.8s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem; color: var(--muted);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 0.2rem 0.5rem; border-radius: 2px;
+    }
+
+    /* PHASE BLOCK */
+    .phase {
+      margin-bottom: 3.5rem;
+    }
+    .phase-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; color: var(--green);
+      letter-spacing: 0.16em; text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .phase-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.3rem; font-weight: 700;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* SCREENSHOT */
+    .screenshot-block { margin-bottom: 2rem; }
+    .screenshot-block img {
+      width: 100%; border-radius: 4px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+    .screenshot-caption {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem; color: var(--muted);
+      margin-top: 0.6rem; letter-spacing: 0.06em;
+    }
+
+    /* NOTES GRID */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .note-card {
+      background: var(--slate);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.25rem;
+    }
+    .note-card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; color: var(--cyan);
+      letter-spacing: 0.1em; margin-bottom: 0.85rem;
+    }
+
+    /* CONNECTION TABLE */
+    .conn-table {
+      width: 100%; border-collapse: collapse;
+      margin-bottom: 2rem; font-size: 0.85rem;
+    }
+    .conn-table th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem; color: var(--cyan);
+      letter-spacing: 0.1em; text-align: left;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(100,216,240,0.04);
+    }
+    .conn-table td {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem; color: var(--muted);
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid rgba(100,216,240,0.07);
+    }
+    .conn-table td:first-child { color: var(--text); }
+    .conn-table tr:hover td { background: rgba(100,216,240,0.03); }
+    .arrow { color: var(--green); }
+
+    /* STATUS LIST */
+    .status-list { list-style: none; }
+    .status-list li {
+      font-size: 0.88rem; color: var(--muted);
+      padding: 0.35rem 0;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .status-list li::before {
+      content: '▸'; color: var(--green); font-size: 0.7rem; flex-shrink: 0;
+    }
+
+    /* DEVICE LIST */
+    .device-item {
+      display: flex; align-items: baseline;
+      gap: 0.6rem; margin-bottom: 0.5rem;
+    }
+    .device-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem; color: var(--text); font-weight: 600;
+    }
+    .device-model {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem; color: var(--muted);
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.25rem; }
+      .page { padding: 2.5rem 1.25rem 4rem; }
+      .conn-table { font-size: 0.75rem; }
+      .conn-table th, .conn-table td { padding: 0.5rem 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">&gt; <span>nullpacket</span>.dev</a>
+    <a href="index.html" class="back-link">← Back to Projects</a>
+  </nav>
+
+  <div class="page">
+
+    <div class="project-header">
+      <div class="breadcrumb">
+        <a href="index.html">Projects</a> / Enterprise Office Network
+      </div>
+      <h1 class="project-title">Enterprise Office Network</h1>
+      <div class="project-meta">
+        <span class="status-badge status-active">ACTIVE</span>
+        <span class="tag">Packet Tracer</span>
+        <span class="tag">VLANs</span>
+        <span class="tag">Trunking</span>
+        <span class="tag">Inter-VLAN Routing</span>
+        <span class="tag">DHCP</span>
+        <span class="tag">DNS</span>
+        <span class="tag">ACLs</span>
+      </div>
+    </div>
+
+    <!-- PHASE 1 -->
+    <div class="phase">
+      <div class="phase-label">// Phase 1</div>
+      <div class="phase-title">Physical Topology & Device Setup</div>
+
+      <div class="screenshot-block">
+        <img src="Topology.png" alt="Phase 1 - Physical Topology in Cisco Packet Tracer" />
+        <div class="screenshot-caption">Fig 1.1 — Initial physical topology in Cisco Packet Tracer. All devices placed and cabled.</div>
+      </div>
+
+      <div class="notes-grid">
+
+        <div class="note-card">
+          <div class="note-card-title">DEVICES</div>
+          <div class="device-item">
+            <span class="device-name">HQ-R1</span>
+            <span class="device-model">Cisco 2911</span>
+          </div>
+          <div class="device-item">
+            <span class="device-name">HQ-SW1</span>
+            <span class="device-model">Cisco 2960-24TT</span>
+          </div>
+          <div class="device-item">
+            <span class="device-name">HQ-SW2</span>
+            <span class="device-model">Cisco 2960-24TT</span>
+          </div>
+        </div>
+
+        <div class="note-card">
+          <div class="note-card-title">CURRENT STATUS</div>
+          <ul class="status-list">
+            <li>All required links connected</li>
+            <li>All switch ports still in VLAN 1</li>
+            <li>Router Gi0/0 is up/up</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="note-card" style="margin-bottom:0;">
+        <div class="note-card-title">CONNECTIONS</div>
+        <table class="conn-table">
+          <thead>
+            <tr>
+              <th>From</th>
+              <th>Interface</th>
+              <th></th>
+              <th>To</th>
+              <th>Interface</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>HQ-R1</td><td>Gi0/0</td><td class="arrow">→</td><td>HQ-SW1</td><td>Gi0/1</td></tr>
+            <tr><td>HQ-SW1</td><td>Gi0/2</td><td class="arrow">→</td><td>HQ-SW2</td><td>Gi0/1</td></tr>
+            <tr><td>DNS-SRV</td><td>Fa0</td><td class="arrow">→</td><td>HQ-SW1</td><td>Fa0/1</td></tr>
+            <tr><td>FILE-SRV</td><td>Fa0</td><td class="arrow">→</td><td>HQ-SW1</td><td>Fa0/2</td></tr>
+            <tr><td>ACC-PC1</td><td>Fa0</td><td class="arrow">→</td><td>HQ-SW2</td><td>Fa0/1</td></tr>
+            <tr><td>ACC-PC2</td><td>Fa0</td><td class="arrow">→</td><td>HQ-SW2</td><td>Fa0/2</td></tr>
+            <tr><td>SALES-PC1</td><td>Fa0</td><td class="arrow">→</td><td>HQ-SW2</td><td>Fa0/3</td></tr>
+            <tr><td>SALES-PC2</td><td>Fa0</td><td class="arrow">→</td><td>HQ-SW2</td><td>Fa0/4</td></tr>
+            <tr><td>IT-PC1</td><td>Fa0</td><td class="arrow">→</td><td>HQ-SW2</td><td>Fa0/5</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <!-- end phase 1 -->
+
+  </div>
+
+</body>
+</html>
